@@ -1,0 +1,89 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/bootstrap-landing.css" rel="stylesheet">
+        <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+
+        <title>Try MongoDB</title>
+
+    </head>
+
+    <body>
+
+
+        <div class="container-narrow">
+
+            <!-- nav -->
+            <div class="masthead">
+                <ul class="nav nav-pills pull-right">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="http://docker.io">Docker</a></li>
+                    <li><a href="http://mongodb.com">MongoDB</a></li>
+
+                </ul>
+                <h3 class="muted">Docker + MongoDB = Fun Times</h3>
+            </div>
+            
+            <hr>
+
+            <div class="jubotron">
+                <h1>Want to try MongoDB?</h1>
+                <p class="lead">MongoDB is the leading NoSQL database, empowering businesses to be more agile and scalable. Fortune 500 companies and startups alike are using MongoDB to create new types of applications, improve customer experience, accelerate time to market and reduce costs.</p>
+                <p>Powered by <a href="http://docker.io">Docker</a>.</p>
+                <a id="button" class="btn btn-large btn-success">Try MongoDB now</a>
+            </div>
+
+            <hr>
+
+
+            <div class="row-fluid marketing">
+                <div class="span6 well">
+                    <h4>About <a href="http://docker.io">Docker</a></h4>
+                    <p>Docker is an open-source engine which automates the deployment of applications as highly portable, self-sufficient containers which are independent of hardware, language, framework, packaging system and hosting provider.</p>
+                </div>
+
+                <div class="span6 well">
+                    <h4>About <a href="http://mongodb.com">MongoDB</a></h4>
+                    <p>MongoDB is an open-source database used by companies of all sizes, across all industries and for a wide variety of applications. It is an agile database that allows schemas to change quickly as applications evolve, while still providing the functionality developers expect from traditional databases, such as secondary indexes, a full query language and strict consistency.</p>
+
+                </div>
+
+            </div>
+
+        <div class="footer">
+            <div class="container">
+                <p class="muted credit">&copy; Nick Stinemates 2013 | <a href="https://twitter.com/nickstinemates">Follow me on Twitter</a> | <a href="mailto:nstinemat.es@gmail.com">Contact Me</a> | <a href="http://www.linkedin.com/in/nickstinemates">Connect on LinkedIn</a>
+            </div>
+        </div>
+
+        </div> <!-- /container -->
+
+        <script type="text/javascript">
+            $("#button").click(function() {
+                $.ajax({
+                    url: '/new',
+                    type: 'POST',
+                    dataType: 'json'
+                    }).done(function(response) {
+                        console.log(response);
+                        window.location = build_url(response);
+                    });
+                });
+
+            function build_url(response) {
+                pathArray = window.location.href.split( '/' );
+                protocol = pathArray[0];
+                host = pathArray[2];
+                url = protocol + '//' + host + "/details/" + response.url;
+                return url;
+            }
+
+        </script>
+</html>

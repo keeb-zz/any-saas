@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -x
+
+HIPACHE_CONTAINER=$(docker ps | grep hipache | cut -d" " -f1)
+
+if [[ -z "$HIPACHE_CONTAINER" ]]; then
+    echo "hipache is not running"
+    exit 1
+fi
+
+
+HOST=172.17.42.1
+export DOCKER_HOST=$HOST
+export HIPACHE_PORT=80
+MONGO_DOMAIN=mongo
+
+export REDIS_PORT=$(docker port $HIPACHE_CONTAINER 6379)
+export REDIS_HOST=$HOST
+
+MONGO_CONTAINER=$(docker run -d \
+    -e REDIS_HOST=$REDIS_HOST \
+    -e REDIS_PORT=$REDIS_PORT \
+    -e DOCKER_HOST=$DOCKER_HOST \
+    -e HIPACHE_PORT=80 \
+    registry.stinemat.es/keeb/trymongo-website)
+
+MONGO_PORT=$(docker port $MONGO_CONTAINER 5000)
+MONGO_HOST=$HOST
+
+# clear out old keys
+redis-cli -h $REDIS_HOST -p $REDIS_PORT del frontend:$MONGO_DOMAIN
+redis-cli -h $REDIS_HOST -p $REDIS_PORT rpush frontend:$MONGO_DOMAIN api
+redis-cli -h $REDIS_HOST -p $REDIS_PORT rpush frontend:$MONGO_DOMAIN http://$MONGO_HOST:$MONGO_PORT
+
