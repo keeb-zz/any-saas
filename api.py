@@ -19,7 +19,7 @@ IMAGE_NAME = "keeb/mongodb"
 COMMAND = ["/usr/bin/mongod", "--config", "/etc/mongodb.conf"]
 DOMAIN = "mongodb.stinemat.es"
 HIPACHE_PORT="80"
-MONGO_PORT="27017"
+EXPOSED_PORT="27017"
 
 #environment variables, must be set in order for application to function
 try:
@@ -42,10 +42,10 @@ def index():
 
 @app.route('/new', methods=["POST"])
 def new():
-    container = c.create_container(IMAGE_NAME, COMMAND, ports=[MONGO_PORT])
+    container = c.create_container(IMAGE_NAME, COMMAND, ports=[EXPOSED_PORT])
     container_id = container["Id"]
     c.start(container_id)
-    container_port = c.port(container_id, MONGO_PORT)
+    container_port = c.port(container_id, EXPOSED_PORT)
     r.rpush("frontend:%s.%s" % (container_id, DOMAIN), container_id)
     r.rpush("frontend:%s.%s" % (container_id, DOMAIN), "http://%s:%s" %(DOMAIN, container_port))
     if HIPACHE_PORT == "80":
