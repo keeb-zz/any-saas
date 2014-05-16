@@ -41,7 +41,7 @@
                     <p><pre>
 from pymongo import Connection
 
-HOST="localhost"
+HOST="{{ url.split(":")[0] }}"
 PORT={{ url.split(":")[1] }}
 c = Connection(host=HOST, port=PORT)
 print "connected successfully"
